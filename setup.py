@@ -9,7 +9,7 @@ def get_version(major=0, minor=0, build=0):
 
 
 setup(
-    name='pysitemap',
+    name='sitemap-generator',
     version=get_version(
         major=0,
         minor=2,
@@ -23,7 +23,7 @@ setup(
     author_email='kamo@haikson.com',
     description='web crawler and sitemap generator.',
     classifiers=[
-        'Development Status :: Release',
+        'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
