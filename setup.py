@@ -13,7 +13,7 @@ setup(
     version=get_version(
         major=0,
         minor=2,
-        build=0,
+        build=2,
     ),
     packages=find_packages(exclude=EXCLUDE_FROM_PACKAGES),
     include_package_data=True,
@@ -23,7 +23,6 @@ setup(
     author_email='kamo@haikson.com',
     description='web crawler and sitemap generator.',
     classifiers=[
-        'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
@@ -33,5 +32,6 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
+    install_requires=['beautifulsoup4', 'mechanize'],
     requires=['beautifulsoup4', 'mechanize']
 )
