@@ -7,7 +7,7 @@ Sitemap generator
 
 ## Gevent
 
-Sitemap-generator uses gevent to implement multiprocessing. Install gevent:
+Sitemap-generator uses [gevent](http://www.gevent.org/) to implement multiprocessing. Install gevent:
 
   pip install gevent
 
@@ -36,4 +36,3 @@ Sitemap-generator uses gevent to implement multiprocessing. Install gevent:
         oformat = 'xml' # output format
         crawl = pysitemap.Crawler(url=url, logfile=logfile, oformat=oformat)
         crawl.crawl(pool_size=10) # 10 parsing processes
-
