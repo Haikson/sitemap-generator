@@ -2,10 +2,13 @@ import pysitemap
 
 """
 Example script
+Uses gevent to implement multiprocessing if Gevent installed
+To install gevent:
+    $ pip install gevent
 """
 
 if __name__=='__main__':
-    url = 'http://www.dksys.ru/' # url from to crawl
+    url = 'http://www.example.com/' # url from to crawl
     logfile = 'errlog.log' # path to logfile
     oformat = 'xml' # output format
     outputfile = 'sitemap.xml' # path to output file
