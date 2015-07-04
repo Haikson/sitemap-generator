@@ -35,5 +35,5 @@ Sitemap-generator uses gevent to implement multiprocessing. Install gevent:
         logfile = 'errlog.log' # path to logfile
         oformat = 'xml' # output format
         crawl = pysitemap.Crawler(url=url, logfile=logfile, oformat=oformat)
-        crawl.crawl()
+        crawl.crawl(pool_size=10) # 10 parsing processes
 
