@@ -14,7 +14,7 @@
         }
     ],
     "require": {
-        "beautifulsoup4",
-        "mechanize"
+        "beautifulsoup4": ">=4.4.0",
+        "mechanize": ">=0.2.5"
     }
 }
