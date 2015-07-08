@@ -1,0 +1,20 @@
+{
+    "name": "Haikson/sitemap-generator",
+    "type": "library",
+    "description": "Sitemap crawler and generator class",
+    "keywords": ["sitemap","crawler"],
+    "homepage": "https://github.com/Haikson/sitemap-generator",
+    "license": "Apache License",
+    "authors": [
+        {
+            "name": "Kamo Petrosyan",
+            "email": "kamo@haikson.com",
+            "homepage": "http://www.haikson.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "beautifulsoup4",
+        "mechanize"
+    }
+}
