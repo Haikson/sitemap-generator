@@ -13,7 +13,7 @@ setup(
     version=get_version(
         major=0,
         minor=3,
-        build=4,
+        build=5,
     ),
     packages=find_packages(exclude=EXCLUDE_FROM_PACKAGES),
     include_package_data=True,
