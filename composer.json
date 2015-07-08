@@ -1,5 +1,5 @@
 {
-    "name": "Haikson/sitemap-generator",
+    "name": "sitemap-generator",
     "type": "library",
     "description": "Sitemap crawler and generator class",
     "keywords": ["sitemap","crawler"],
