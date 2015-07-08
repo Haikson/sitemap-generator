@@ -17,7 +17,7 @@ setup(
     ),
     packages=find_packages(exclude=EXCLUDE_FROM_PACKAGES),
     include_package_data=True,
-    url='https://github.com/Haikson/pysitemap',
+    url='https://github.com/Haikson/sitemap-generator',
     license='GPL3',
     author='Kamo Petrosyan',
     author_email='kamo@haikson.com',
