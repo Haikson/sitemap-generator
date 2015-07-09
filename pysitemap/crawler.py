@@ -1,13 +1,16 @@
+# ~*~ coding: utf-8 ~*~
+__author__ = 'Kamo Petrosyan'
+
 import urllib
 from bs4 import BeautifulSoup
 import urlparse
 import mechanize
 import pickle
 import re
-try:
+try:                    
     import sys
     import gevent
-    from gevent import monkey, pool, queue
+    from gevent import monkey, pool
     monkey.patch_all()
     if 'threading' in sys.modules:
         del sys.modules['threading']
@@ -28,8 +31,7 @@ class Crawler:
 
         # create lists for the urls in que and visited urls
         self.urls = set([url])
-        self.visited = set([])
-        self.excepted = set([])
+        self.visited = set([url])
         self.exts = ['htm', 'php']
         self.allowed_regex = '\.((?!htm)(?!php)\w+)$'
 
@@ -50,77 +52,51 @@ class Crawler:
         self.regex = re.compile(self.allowed_regex)
         if gevent_installed and pool_size > 1:
             self.pool = pool.Pool(pool_size)
-            self.queue = gevent.queue.Queue()
-            self.queue.put(self.url)
             self.pool.spawn(self.parse_gevent)
-            while not self.queue.empty() and not self.pool.free_count() == pool_size:
-                gevent.sleep(0.1)
-                while len(self.urls) > 0:
-                    self.queue.put(self.urls.pop())
-                for x in xrange(0, min(self.queue.qsize(), self.pool.free_count())):
-                    self.pool.spawn(self.parse_gevent)
             self.pool.join()
         else:
             while len(self.urls) > 0:
                 self.parse()
         if self.oformat == 'xml':
             self.write_xml()
-        self.errlog()
 
     def parse_gevent(self):
-        url = self.queue.get(timeout=0)
-        try:
-            br = mechanize.Browser()
-            response = br.open(url)
-            if response.code >= 400:
-                self.excepted.update([(url, "Error {} at url {}".format(response.code, url))])
-                return
-                       
-            for link in br.links():
-                newurl =  urlparse.urljoin(link.base_url, link.url)
-                if self.is_valid(newurl):
-                    self.visited.update([newurl])
-                    self.urls.update([newurl])
-        except Exception, e:
-            self.excepted.update([(url, e.message)])
-            return
-        except gevent.queue.Empty:
-            br.close()
-            if self.echo:
-                print('{} pages parsed :: {} parsing processes  :: {} pages in the queue'.format(len(self.visited), len(self.pool), self.queue.qsize()))
-            return
-
-        br.close()
-        if self.echo:
-            print('{} pages parsed :: {} parsing processes  :: {} pages in the queue'.format(len(self.visited), len(self.pool), self.queue.qsize()))
-
+        self.parse()
+        while len(self.urls) > 0 and not self.pool.full():
+            self.pool.spawn(self.parse_gevent)
 
     def parse(self):
         if self.echo:
-            print('{} pages parsed :: {} pages in the queue'.format(len(self.visited), len(self.urls)))
+            if not gevent_installed:
+                print('{} pages parsed :: {} pages in the queue'.format(len(self.visited), len(self.urls)))
+            else:
+                print('{} pages parsed :: {} parsing processes  :: {} pages in the queue'.format(len(self.visited), len(self.pool), len(self.urls)))
 
         # Set the startingpoint for the spider and initialize 
         # the a mechanize browser object
-        url = self.urls.pop()
-        br = mechanize.Browser()
-        try:
-            response = br.open(url)
-            if response.code >= 400:
-                self.excepted.update([(url, "Error {} at url {}".format(response.code, url))])
-                return
-                       
-            for link in br.links():
-                newurl =  urlparse.urljoin(link.base_url, link.url)
-                #print newurl
-                if self.is_valid(newurl):
-                    self.urls.update([newurl])
 
-            self.visited.update([url])
-        except Exception, e:
-            self.excepted.update([(url, e.message)])
+        if not self.urls:
+            return
+        else:
+            url = self.urls.pop()
+            br = mechanize.Browser()
+            try:
+                response = br.open(url)
+                if response.code >= 400:
+                    self.errlog("Error {} at url {}".format(response.code, url))
+                    return
+                           
+                for link in br.links():
+                    newurl =  urlparse.urljoin(link.base_url, link.url)
+                    #print newurl
+                    if self.is_valid(newurl):
+                        self.visited.update([newurl])
+                        self.urls.update([newurl])
+            except Exception, e:
+                self.errlog(e.message)
 
-        br.close()
-        del(br)
+            br.close()
+            del(br)
 
 
 
@@ -134,11 +110,9 @@ class Crawler:
             return False
         return True
 
-    def errlog(self):
-        while len(self.excepted) > 0:
-            ex = self.excepted.pop()
-            self.logfile.write('{}\n'.format('\t'.join(ex)))
-        self.logfile.close()
+    def errlog(self, msg):
+        self.logfile.write(msg)
+        self.logfile.write('\n')
 
     def write_xml(self):
         of = open(self.outputfile, 'w')
