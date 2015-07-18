@@ -1,6 +1,3 @@
-# ~*~ coding: utf-8 ~*~
-__author__ = 'Kamo Petrosyan'
-
 import urllib
 from bs4 import BeautifulSoup
 import urlparse
@@ -9,13 +6,13 @@ import pickle
 import re
 try:                    
     import sys
+    if 'threading' in sys.modules:
+        del sys.modules['threading']
+        print('threading module loaded before patching!')
+        print('threading module deleted from sys.modules!\n')
     import gevent
     from gevent import monkey, pool
     monkey.patch_all()
-    if 'threading' in sys.modules:
-        del sys.modules['threading']
-        print('threading module loaded before patching!\n')
-        print('threading module deleted from sys.modules!\n')
     gevent_installed = True
 except:
     print("Gevent does not installed. Parsing process will be slower.")
