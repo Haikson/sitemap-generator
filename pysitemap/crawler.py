@@ -56,6 +56,8 @@ class Crawler:
                 self.parse()
         if self.oformat == 'xml':
             self.write_xml()
+        elif self.oformat == 'txt':
+            self.write_txt()
 
     def parse_gevent(self):
         self.parse()
@@ -120,4 +122,12 @@ class Crawler:
             of.write(url_str.format(self.visited.pop()))
 
         of.write('</urlset>')
+        of.close()
+
+    def write_txt(self):
+        of = open(self.outputfile, 'w')
+        url_str = '{}\n'
+        while self.visited:
+            of.write(url_str.format(self.visited.pop()))
+
         of.close()
