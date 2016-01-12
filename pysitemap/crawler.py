@@ -101,6 +101,8 @@ class Crawler:
 
     def is_valid(self, url):
         valid = False
+        if '#' in url:
+            url = url[:url.find('#')]
         if url in self.visited:
             return False
         if not self.url in url:
