@@ -1,16 +1,12 @@
-import urllib
-from bs4 import BeautifulSoup
 import urlparse
 import mechanize
-import pickle
 import re
-try:                    
+try:
     import sys
     if 'threading' in sys.modules:
         del sys.modules['threading']
         print('threading module loaded before patching!')
         print('threading module deleted from sys.modules!\n')
-    import gevent
     from gevent import monkey, pool
     monkey.patch_all()
     gevent_installed = True
@@ -36,7 +32,7 @@ class Crawler:
         self.exts = exts
 
     def allow_regex(self, regex=None):
-        if not regex is None:
+        if regex is not None:
             self.allowed_regex = regex
         else:
             allowed_regex = ''
@@ -71,7 +67,7 @@ class Crawler:
             else:
                 print('{} pages parsed :: {} parsing processes  :: {} pages in the queue'.format(len(self.visited), len(self.pool), len(self.urls)))
 
-        # Set the startingpoint for the spider and initialize 
+        # Set the startingpoint for the spider and initialize
         # the a mechanize browser object
 
         if not self.urls:
@@ -84,10 +80,10 @@ class Crawler:
                 if response.code >= 400:
                     self.errlog("Error {} at url {}".format(response.code, url))
                     return
-                           
+
                 for link in br.links():
-                    newurl =  urlparse.urljoin(link.base_url, link.url)
-                    #print newurl
+                    newurl = urlparse.urljoin(link.base_url, link.url)
+                    # print(newurl)
                     if self.is_valid(newurl):
                         self.visited.update([newurl])
                         self.urls.update([newurl])
@@ -97,15 +93,12 @@ class Crawler:
             br.close()
             del(br)
 
-
-
     def is_valid(self, url):
-        valid = False
         if '#' in url:
             url = url[:url.find('#')]
         if url in self.visited:
             return False
-        if not self.url in url:
+        if self.url not in url:
             return False
         if re.search(self.regex, url):
             return False

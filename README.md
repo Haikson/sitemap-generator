@@ -16,10 +16,10 @@ Sitemap-generator uses [gevent](http://www.gevent.org/) to implement multiproces
     import pysitemap
 
 
-    if __name__=='__main__':
-        url = 'http://www.example.com/' # url from to crawl
-        logfile = 'errlog.log' # path to logfile
-        oformat = 'xml' # output format
+    if __name__ == '__main__':
+        url = 'http://www.example.com/'  # url from to crawl
+        logfile = 'errlog.log'  # path to logfile
+        oformat = 'xml'  # output format
         crawl = pysitemap.Crawler(url=url, logfile=logfile, oformat=oformat)
         crawl.crawl()
 
@@ -30,9 +30,9 @@ Sitemap-generator uses [gevent](http://www.gevent.org/) to implement multiproces
     import pysitemap
 
 
-    if __name__=='__main__':
-        url = 'http://www.example.com/' # url from to crawl
-        logfile = 'errlog.log' # path to logfile
-        oformat = 'xml' # output format
+    if __name__ == '__main__':
+        url = 'http://www.example.com/'  # url from to crawl
+        logfile = 'errlog.log'  # path to logfile
+        oformat = 'xml'  # output format
         crawl = pysitemap.Crawler(url=url, logfile=logfile, oformat=oformat)
-        crawl.crawl(pool_size=10) # 10 parsing processes
+        crawl.crawl(pool_size=10)  # 10 parsing processes
