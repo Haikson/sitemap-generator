@@ -43,7 +43,7 @@ class Crawler:
     def crawl(self, echo=False, pool_size=1):
         self.echo = echo
         self.regex = re.compile(self.allowed_regex)
-        if gevent_installed and pool_size > 1:
+        if gevent_installed and pool_size >= 1:
             self.pool = pool.Pool(pool_size)
             self.pool.spawn(self.parse_gevent)
             self.pool.join()
