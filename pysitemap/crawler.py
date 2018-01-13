@@ -5,6 +5,7 @@ import urlparse
 import requests
 from lxml import html
 import re
+import time
 try:
     import sys
     if 'threading' in sys.modules:
@@ -46,8 +47,11 @@ class Crawler:
             self.allowed_regex = '\.({}\w+)$'.format(allowed_regex)
 
     def crawl(self, echo=False, pool_size=1):
+        # sys.stdout.write('echo attribute deprecated and will be removed in future')
         self.echo = echo
         self.regex = re.compile(self.allowed_regex)
+
+        print('Parsing pages')
         if gevent_installed and pool_size >= 1:
             self.pool = pool.Pool(pool_size)
             self.pool.spawn(self.parse_gevent)
@@ -71,13 +75,12 @@ class Crawler:
 
     def parse(self):
         if self.echo:
-            if not gevent_installed:
-                print('{} pages parsed :: {} pages in the queue'.format(len(self.visited), len(self.urls)))
-            else:
-                print('{} pages parsed :: {} parsing processes  :: {} pages in the queue'.format(len(self.visited), len(self.pool), len(self.urls)))
-
-        # Set the startingpoint for the spider and initialize
-        # the a mechanize browser object
+            n_visited, n_urls, n_pool = len(self.visited), len(self.urls), len(self.pool)
+            status = (
+                '{} pages parsed :: {} pages in the queue'.format(n_visited, n_urls),
+                '{} pages parsed :: {} parsing processes  :: {} pages in the queue'.format(n_visited, n_pool, n_urls)
+            )
+            print(status[int(gevent_installed)])
 
         if not self.urls:
             return
@@ -138,3 +141,13 @@ class Crawler:
             of.write(url_str.format(self.visited.pop()))
 
         of.close()
+
+    def show_progress(self, count, total, status=''):
+        bar_len = 60
+        filled_len = int(round(bar_len * count / float(total)))
+
+        percents = round(100.0 * count / float(total), 1)
+        bar = '=' * filled_len + '-' * (bar_len - filled_len)
+        sys.stdout.write('[%s] %s%s ...%s\r' % (bar, percents, '%', status))
+        sys.stdout.flush()  # As suggested by Rom Ruben (see: http://stackoverflow.com/questions/3173320/text-progress-bar-in-the-console/27871113#comment50529068_27871113)
+        time.sleep(0.5)
