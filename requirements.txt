@@ -1,2 +1,2 @@
-BeautifulSoup
-mechanize
+lxml
+requests

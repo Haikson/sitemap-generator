@@ -1,7 +1,7 @@
 from distutils.core import setup
 from setuptools import find_packages, setup
 
-EXCLUDE_FROM_PACKAGES = []
+EXCLUDE_FROM_PACKAGES = ['tests',]
 
 
 def get_version(major=0, minor=0, build=0):
@@ -32,6 +32,6 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
-    install_requires=['beautifulsoup4', 'mechanize'],
-    requires=['beautifulsoup4', 'mechanize']
+    install_requires=['lxml', 'requests'],
+    requires=['lxml', 'requests']
 )

@@ -1,5 +1,9 @@
+# -*- coding: utf-8 -*-
+import __future__
+import sys
 import urlparse
-import mechanize
+import requests
+from lxml import html
 import re
 try:
     import sys
@@ -27,6 +31,7 @@ class Crawler:
         self.visited = set([url])
         self.exts = ['htm', 'php']
         self.allowed_regex = '\.((?!htm)(?!php)\w+)$'
+        self.errors = {'404': []}
 
     def set_exts(self, exts):
         self.exts = exts
@@ -54,6 +59,10 @@ class Crawler:
             self.write_xml()
         elif self.oformat == 'txt':
             self.write_txt()
+        with open('errors.txt', 'w') as err_file:
+            for key, val in self.errors.items():
+                err_file.write(u'\n\nError {}\n\n'.format(key))
+                err_file.write(u'\n'.join(set(val)))
 
     def parse_gevent(self):
         self.parse()
@@ -74,24 +83,27 @@ class Crawler:
             return
         else:
             url = self.urls.pop()
-            br = mechanize.Browser()
             try:
-                response = br.open(url)
-                if response.code >= 400:
-                    self.errlog("Error {} at url {}".format(response.code, url))
+                response = requests.get(url)
+                # if status code is not 404, then add url in seld.errors dictionary
+                if response.status_code != 200:
+                    if self.errors.get(str(response.status_code), False):
+                        self.errors[str(response.status_code)].extend([url])
+                    else:
+                        self.errors.update({str(response.status_code): [url]})
+                    self.errlog("Error {} at url {}".format(response.status_code, url))
                     return
 
-                for link in br.links():
-                    newurl = urlparse.urljoin(link.base_url, link.url)
+                tree = html.fromstring(response.text)
+                for link_tag in tree.findall('.//a'):
+                    link = link_tag.attrib.get('href', '')
+                    newurl = urlparse.urljoin(self.url, link)
                     # print(newurl)
                     if self.is_valid(newurl):
                         self.visited.update([newurl])
                         self.urls.update([newurl])
             except Exception, e:
                 self.errlog(e.message)
-
-            br.close()
-            del(br)
 
     def is_valid(self, url):
         if '#' in url:
