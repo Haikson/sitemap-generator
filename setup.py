@@ -12,8 +12,8 @@ setup(
     name='sitemap-generator',
     version=get_version(
         major=0,
-        minor=4,
-        build=4,
+        minor=5,
+        build=0,
     ),
     packages=find_packages(exclude=EXCLUDE_FROM_PACKAGES),
     include_package_data=True,
@@ -30,6 +30,7 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     install_requires=['lxml', 'requests'],

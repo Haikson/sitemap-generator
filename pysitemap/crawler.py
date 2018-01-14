@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 import __future__
 import sys
-import urlparse
+if sys.version_info.major == 2:
+    import urlparse
+else:
+    from urllib import parse as urlparse 
 import requests
 from lxml import html
 import re
@@ -57,6 +60,7 @@ class Crawler:
             self.pool.spawn(self.parse_gevent)
             self.pool.join()
         else:
+            self.pool = [None,] # fixing n_poll exception in self.parse with poolsize > 1 and gevent_installed == False
             while len(self.urls) > 0:
                 self.parse()
         if self.oformat == 'xml':
@@ -105,8 +109,8 @@ class Crawler:
                     if self.is_valid(newurl):
                         self.visited.update([newurl])
                         self.urls.update([newurl])
-            except Exception, e:
-                self.errlog(e.message)
+            except Exception as e:
+                self.errlog(repr(e))
 
     def is_valid(self, url):
         if '#' in url:
