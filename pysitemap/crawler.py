@@ -140,7 +140,7 @@ class Crawler:
 
     def write_txt(self):
         of = open(self.outputfile, 'w')
-        url_str = '{}\n'
+        url_str = u'{}\n'
         while self.visited:
             of.write(url_str.format(self.visited.pop()))
 
