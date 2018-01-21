@@ -6,6 +6,9 @@ if sys.version_info.major == 2:
 else:
     from urllib import parse as urlparse 
 import requests
+from requests.packages.urllib3.util.retry import Retry
+from requests.adapters import HTTPAdapter
+
 from lxml import html
 import re
 import time
@@ -60,9 +63,10 @@ class Crawler:
             self.pool.spawn(self.parse_gevent)
             self.pool.join()
         else:
+            s = requests.Session()
             self.pool = [None,] # fixing n_poll exception in self.parse with poolsize > 1 and gevent_installed == False
             while len(self.urls) > 0:
-                self.parse()
+                self.parse(s)
         if self.oformat == 'xml':
             self.write_xml()
         elif self.oformat == 'txt':
@@ -73,11 +77,12 @@ class Crawler:
                 err_file.write(u'\n'.join(set(val)))
 
     def parse_gevent(self):
-        self.parse()
+        s = requests.Session()
+        self.parse(s)
         while len(self.urls) > 0 and not self.pool.full():
             self.pool.spawn(self.parse_gevent)
 
-    def parse(self):
+    def parse(self, session):
         if self.echo:
             n_visited, n_urls, n_pool = len(self.visited), len(self.urls), len(self.pool)
             status = (
@@ -91,7 +96,8 @@ class Crawler:
         else:
             url = self.urls.pop()
             try:
-                response = requests.get(url)
+                sys.stdout.write(url + '\n')
+                response = session.get(url)
                 # if status code is not 404, then add url in seld.errors dictionary
                 if response.status_code != 200:
                     if self.errors.get(str(response.status_code), False):
@@ -108,14 +114,16 @@ class Crawler:
                     # print(newurl)
                     if self.is_valid(newurl):
                         self.visited.update([newurl])
+
                         self.urls.update([newurl])
             except Exception as e:
                 self.errlog(repr(e))
 
     def is_valid(self, url):
+        oldurl = url
         if '#' in url:
             url = url[:url.find('#')]
-        if url in self.visited:
+        if url in self.visited or oldurl in self.visited:
             return False
         if self.url not in url:
             return False
