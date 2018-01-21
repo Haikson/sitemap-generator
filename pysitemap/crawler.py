@@ -113,9 +113,10 @@ class Crawler:
                 self.errlog(repr(e))
 
     def is_valid(self, url):
+        oldurl = url
         if '#' in url:
             url = url[:url.find('#')]
-        if url in self.visited:
+        if url in self.visited or oldurl in self.visited:
             return False
         if self.url not in url:
             return False
