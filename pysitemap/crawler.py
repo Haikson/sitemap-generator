@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 import __future__
 import sys
-import urlparse
+if sys.version_info.major == 2:
+    import urlparse
+else:
+    from urllib import parse as urlparse
 import requests
 from lxml import html
 import re
@@ -57,6 +60,7 @@ class Crawler:
             self.pool.spawn(self.parse_gevent)
             self.pool.join()
         else:
+            self.pool = [None,] # fixing n_poll exception in self.parse with poolsize > 1 and gevent_installed == False
             while len(self.urls) > 0:
                 self.parse()
         if self.oformat == 'xml':
@@ -105,13 +109,14 @@ class Crawler:
                     if self.is_valid(newurl):
                         self.visited.update([newurl])
                         self.urls.update([newurl])
-            except Exception, e:
-                self.errlog(e.message)
+            except Exception as e:
+                self.errlog(repr(e))
 
     def is_valid(self, url):
+        oldurl = url
         if '#' in url:
             url = url[:url.find('#')]
-        if url in self.visited:
+        if url in self.visited or oldurl in self.visited:
             return False
         if self.url not in url:
             return False
@@ -136,7 +141,7 @@ class Crawler:
 
     def write_txt(self):
         of = open(self.outputfile, 'w')
-        url_str = '{}\n'
+        url_str = u'{}\n'
         while self.visited:
             of.write(url_str.format(self.visited.pop()))
 
