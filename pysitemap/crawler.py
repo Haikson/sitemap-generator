@@ -101,7 +101,11 @@ class Crawler:
                     self.errlog("Error {} at url {}".format(response.status_code, url))
                     return
 
-                tree = html.fromstring(response.text)
+                try:
+                    tree = html.fromstring(response.text)
+                except ValueError as e:
+                    self.errlog(repr(e))
+                    tree = html.fromstring(response.content)
                 for link_tag in tree.findall('.//a'):
                     link = link_tag.attrib.get('href', '')
                     newurl = urlparse.urljoin(self.url, link)
