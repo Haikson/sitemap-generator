@@ -19,7 +19,7 @@ try:
     monkey.patch_all()
     gevent_installed = True
 except:
-    print("Gevent does not installed. Parsing process will be slower.")
+    print("Gevent is not installed. Parsing process will be slower.")
     gevent_installed = False
 
 
@@ -30,7 +30,7 @@ class Crawler:
         self.oformat = oformat
         self.outputfile = outputfile
 
-        # create lists for the urls in que and visited urls
+        # create lists for urls in queue and visited urls
         self.urls = set([url])
         self.visited = set([url])
         self.exts = ['htm', 'php']
@@ -60,7 +60,7 @@ class Crawler:
             self.pool.spawn(self.parse_gevent)
             self.pool.join()
         else:
-            self.pool = [None,] # fixing n_poll exception in self.parse with poolsize > 1 and gevent_installed == False
+            self.pool = [None,] # fixing n_pool exception in self.parse with poolsize > 1 and gevent_installed == False
             while len(self.urls) > 0:
                 self.parse()
         if self.oformat == 'xml':
