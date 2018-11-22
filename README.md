@@ -3,13 +3,13 @@ Sitemap generator
 
 ## installing
 
-  pip install sitemap-generator
+    pip install sitemap-generator
 
 ## Gevent
 
 Sitemap-generator uses [gevent](http://www.gevent.org/) to implement multiprocessing. Install gevent:
 
-  pip install gevent
+    pip install gevent
 
 ## example
 
