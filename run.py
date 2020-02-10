@@ -1,5 +1,5 @@
-import pysitemap
-
+from pysitemap import Crawler
+import asyncio
 """
 Example script
 Uses gevent to implement multiprocessing if Gevent installed
@@ -8,9 +8,12 @@ To install gevent:
 """
 
 if __name__ == '__main__':
-    url = 'http://www.lumpro.ru/'  # url from to crawl
+    url = 'http://www.stroivopros.ru/'  # url from to crawl
     logfile = 'errlog.log'  # path to logfile
     oformat = 'xml'  # output format
     outputfile = 'sitemap.xml'  # path to output file
-    crawl = pysitemap.Crawler(url=url, logfile=logfile, oformat=oformat, outputfile=outputfile)
-    crawl.crawl(pool_size=20, echo=True)
+    loop = asyncio.get_event_loop()
+    crawler = Crawler(url=url, logfile=logfile, oformat=oformat, outputfile=outputfile)
+    future = asyncio.ensure_future(crawler.crawl(echo=True))
+    loop.run_until_complete(future)
+
