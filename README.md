@@ -5,34 +5,21 @@ Sitemap generator
 
     pip install sitemap-generator
 
-## Gevent
-
-Sitemap-generator uses [gevent](http://www.gevent.org/) to implement multiprocessing. Install gevent:
-
-    pip install gevent
-
 ## example
 
-    import pysitemap
-
-
+    import sys
+    import logging
+    from pysitemap import crawler
+    
     if __name__ == '__main__':
-        url = 'http://www.example.com/'  # url from to crawl
-        logfile = 'errlog.log'  # path to logfile
-        oformat = 'xml'  # output format
-        crawl = pysitemap.Crawler(url=url, logfile=logfile, oformat=oformat)
-        crawl.crawl()
+        if '--iocp' in sys.argv:
+            from asyncio import events, windows_events
+            sys.argv.remove('--iocp')
+            logging.info('using iocp')
+            el = windows_events.ProactorEventLoop()
+            events.set_event_loop(el)
+    
+        # root_url = sys.argv[1]
+        root_url = 'https://www.haikson.com'
+        crawler(root_url, out_file='sitemap.xml')
 
-
-## multiprocessing example
-
-
-    import pysitemap
-
-
-    if __name__ == '__main__':
-        url = 'http://www.example.com/'  # url from to crawl
-        logfile = 'errlog.log'  # path to logfile
-        oformat = 'xml'  # output format
-        crawl = pysitemap.Crawler(url=url, logfile=logfile, oformat=oformat)
-        crawl.crawl(pool_size=10)  # 10 parsing processes
