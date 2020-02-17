@@ -2,13 +2,15 @@ import asyncio
 import re
 import urllib.parse
 from pysitemap.format_processors.xml import XMLWriter
+from pysitemap.format_processors.text import TextWriter
 import aiohttp
 
 
 class Crawler:
 
     format_processors = {
-        'xml': XMLWriter
+        'xml': XMLWriter,
+        'txt': TextWriter
     }
 
     def __init__(self, rooturl, out_file, out_format='xml', maxtasks=100):
