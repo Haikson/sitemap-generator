@@ -3,6 +3,11 @@ from setuptools import find_packages, setup
 
 EXCLUDE_FROM_PACKAGES = ['tests',]
 
+def get_requirements():
+    requirements = []
+    with open('requirements.txt', 'r') as df:
+        requirements = df.readlines()
+    return [requirement.strip() for requirement in requirements]
 
 def get_version(major=0, minor=0, build=0):
     return '%s.%s.%s' % (major, minor, build)
@@ -28,11 +33,10 @@ setup(
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.7',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
-    install_requires=['lxml', 'requests'],
-    requires=['lxml', 'requests']
+    install_requires=get_requirements(),
+    requires=get_requirements()
 )

@@ -1,16 +1,15 @@
-import pysitemap
-
-"""
-Example script
-Uses gevent to implement multiprocessing if Gevent installed
-To install gevent:
-    $ pip install gevent
-"""
+import sys
+import logging
+from pysitemap import crawler
 
 if __name__ == '__main__':
-    url = 'http://www.lumpro.ru/'  # url from to crawl
-    logfile = 'errlog.log'  # path to logfile
-    oformat = 'xml'  # output format
-    outputfile = 'sitemap.xml'  # path to output file
-    crawl = pysitemap.Crawler(url=url, logfile=logfile, oformat=oformat, outputfile=outputfile)
-    crawl.crawl(pool_size=20, echo=True)
+    if '--iocp' in sys.argv:
+        from asyncio import events, windows_events
+        sys.argv.remove('--iocp')
+        logging.info('using iocp')
+        el = windows_events.ProactorEventLoop()
+        events.set_event_loop(el)
+
+    # root_url = sys.argv[1]
+    root_url = 'https://www.haikson.com'
+    crawler(root_url, out_file='sitemap.xml')
