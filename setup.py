@@ -17,8 +17,8 @@ setup(
     name='sitemap-generator',
     version=get_version(
         major=0,
-        minor=5,
-        build=2,
+        minor=9,
+        build=0,
     ),
     packages=find_packages(exclude=EXCLUDE_FROM_PACKAGES),
     include_package_data=True,
