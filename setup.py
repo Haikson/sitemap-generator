@@ -1,4 +1,5 @@
 from setuptools import find_packages, setup
+from version import VERSION
 
 EXCLUDE_FROM_PACKAGES = ['tests',]
 
@@ -8,17 +9,10 @@ def get_requirements():
         requirements = df.readlines()
     return [requirement.strip() for requirement in requirements]
 
-def get_version(major=0, minor=0, build=0):
-    return '%s.%s.%s' % (major, minor, build)
-
 
 setup(
     name='sitemap-generator',
-    version=get_version(
-        major=0,
-        minor=9,
-        build=0,
-    ),
+    version=VERSION,
     packages=find_packages(exclude=EXCLUDE_FROM_PACKAGES),
     include_package_data=True,
     url='https://github.com/Haikson/sitemap-generator',
