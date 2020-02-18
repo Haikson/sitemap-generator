@@ -1,4 +1,3 @@
-from distutils.core import setup
 from setuptools import find_packages, setup
 
 EXCLUDE_FROM_PACKAGES = ['tests',]

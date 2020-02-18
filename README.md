@@ -4,6 +4,12 @@ Sitemap generator
 ## installing
 
     pip install sitemap-generator
+    
+## requirements
+
+    asyncio
+    aiofile
+    aiohttp
 
 ## example
 
