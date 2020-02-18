@@ -3,6 +3,12 @@ from version import VERSION
 
 EXCLUDE_FROM_PACKAGES = ['tests',]
 
+def get_long_description():
+    long_description = ""
+    with open("README.rst", "r") as fh:
+        long_description = fh.read()
+    return long_description
+
 def get_requirements():
     requirements = []
     with open('requirements.txt', 'r') as df:
@@ -20,6 +26,8 @@ setup(
     author='Kamo Petrosyan',
     author_email='kamo@haikson.com',
     description='web crawler and sitemap generator.',
+    long_description=get_long_description(),
+    long_description_content_type="text/x-rst",
     classifiers=[
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
