@@ -21,7 +21,7 @@ def crawler(root_url, out_file, out_format='xml', maxtasks=100):
         loop.add_signal_handler(signal.SIGINT, loop.stop)
     except RuntimeError:
         pass
-    print('todo:', len(c.todo))
+    print('todo_queue:', len(c.todo_queue))
     print('busy:', len(c.busy))
     print('done:', len(c.done), '; ok:', sum(c.done.values()))
     print('tasks:', len(c.tasks))
