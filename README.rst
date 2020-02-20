@@ -54,6 +54,12 @@ TODO
 changelog
 ---------
 
+v. 0.9.2
+''''''''
+
+-  todo queue and done list backends
+-  sqlite backend for todo queue and done lists
+
 v. 0.9.1
 ''''''''
 
