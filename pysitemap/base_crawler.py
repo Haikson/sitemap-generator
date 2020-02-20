@@ -14,7 +14,8 @@ class Crawler:
         'txt': TextWriter
     }
 
-    def __init__(self, rooturl, out_file, out_format='xml', maxtasks=100):
+    def __init__(self, rooturl, out_file, out_format='xml', maxtasks=100,
+                 todo_queue_backend=set, done_backend=dict):
         """
         Crawler constructor
         :param rooturl: root url of site
@@ -27,9 +28,9 @@ class Crawler:
         :type maxtasks: int
         """
         self.rooturl = rooturl
-        self.todo = set()
+        self.todo_queue = todo_queue_backend()
         self.busy = set()
-        self.done = {}
+        self.done = done_backend()
         self.tasks = set()
         self.sem = asyncio.Semaphore(maxtasks)
 
@@ -63,8 +64,8 @@ class Crawler:
             if (url.startswith(self.rooturl) and
                     url not in self.busy and
                     url not in self.done and
-                    url not in self.todo):
-                self.todo.add(url)
+                    url not in self.todo_queue):
+                self.todo_queue.add(url)
                 # Acquire semaphore
                 await self.sem.acquire()
                 # Create async task
@@ -85,7 +86,7 @@ class Crawler:
         print('processing:', url)
 
         # remove url from basic queue and add it into busy list
-        self.todo.remove(url)
+        self.todo_queue.remove(url)
         self.busy.add(url)
 
         try:
@@ -108,6 +109,6 @@ class Crawler:
 
         self.busy.remove(url)
         logging.info(len(self.done), 'completed tasks,', len(self.tasks),
-              'still pending, todo', len(self.todo))
+              'still pending, todo_queue', len(self.todo_queue))
 
 

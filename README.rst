@@ -54,6 +54,13 @@ TODO
 changelog
 ---------
 
+v. 0.9.2
+''''''''
+
+-  todo queue and done list backends
+-  created very slowest sqlite backend for todo queue and done lists (1000 url writing for 3 minutes)
+-  tests for sqlite_todo backend
+
 v. 0.9.1
 ''''''''
 
