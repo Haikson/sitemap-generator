@@ -38,7 +38,7 @@ example
 
         # root_url = sys.argv[1]
         root_url = 'https://www.haikson.com'
-        crawler(root_url, out_file='sitemap.xml')
+        crawler(root_url, out_file='sitemap.xml', exclude_urls=[".pdf", ".jpg", ".zip"])
 
 TODO
 -----
@@ -53,6 +53,15 @@ TODO
 
 changelog
 ---------
+
+v. 0.9.8
+''''''''
+
+- new **exlude_urls** parameter for pysitemap.crowler
+- Crawler. **exclude_urls** parameter.
+    System checks for current url not contains each substring from exclude_urls.
+    Default value is empty list
+- Crawler. **set_exclude_url** method.
 
 v. 0.9.2
 ''''''''

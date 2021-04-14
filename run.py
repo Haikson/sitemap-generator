@@ -11,5 +11,5 @@ if __name__ == '__main__':
         events.set_event_loop(el)
 
     # root_url = sys.argv[1]
-    root_url = 'https://www.metpromstroi.ru'
-    crawler(root_url, out_file='sitemap.xml')
+    root_url = 'https://www.haikson.com'
+    crawler(root_url, out_file='sitemap.xml', exclude_urls=[".pdf", ".jpg", ".zip"])

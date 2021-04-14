@@ -14,6 +14,8 @@ class Crawler:
         'txt': TextWriter
     }
 
+    exclude_urls = []
+
     def __init__(self, rooturl, out_file, out_format='xml', maxtasks=100,
                  todo_queue_backend=set, done_backend=dict):
         """
@@ -62,6 +64,7 @@ class Crawler:
             url = urllib.parse.urljoin(parenturl, url)
             url, frag = urllib.parse.urldefrag(url)
             if (url.startswith(self.rooturl) and
+                    not any(exclude_part in url for exclude_part in self.exclude_urls) and
                     url not in self.busy and
                     url not in self.done and
                     url not in self.todo_queue):
@@ -111,4 +114,5 @@ class Crawler:
         logging.info(len(self.done), 'completed tasks,', len(self.tasks),
               'still pending, todo_queue', len(self.todo_queue))
 
-
+    def set_exclude_url(self, urls_list):
+        self.exclude_urls = urls_list
