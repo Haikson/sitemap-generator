@@ -1,7 +1,13 @@
-from distutils.core import setup
 from setuptools import find_packages, setup
+from version import VERSION
 
 EXCLUDE_FROM_PACKAGES = ['tests',]
+
+def get_long_description():
+    long_description = ""
+    with open("README.rst", "r") as fh:
+        long_description = fh.read()
+    return long_description
 
 def get_requirements():
     requirements = []
@@ -9,17 +15,10 @@ def get_requirements():
         requirements = df.readlines()
     return [requirement.strip() for requirement in requirements]
 
-def get_version(major=0, minor=0, build=0):
-    return '%s.%s.%s' % (major, minor, build)
-
 
 setup(
     name='sitemap-generator',
-    version=get_version(
-        major=0,
-        minor=5,
-        build=2,
-    ),
+    version=VERSION,
     packages=find_packages(exclude=EXCLUDE_FROM_PACKAGES),
     include_package_data=True,
     url='https://github.com/Haikson/sitemap-generator',
@@ -27,6 +26,8 @@ setup(
     author='Kamo Petrosyan',
     author_email='kamo@haikson.com',
     description='web crawler and sitemap generator.',
+    long_description=get_long_description(),
+    long_description_content_type="text/x-rst",
     classifiers=[
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
