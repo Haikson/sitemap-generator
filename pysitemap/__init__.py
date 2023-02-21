@@ -5,7 +5,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def crawler(root_url, out_file, out_format='xml', maxtasks=100, exclude_urls=None):
+def crawler(root_url, out_file, out_format='xml', maxtasks=100, exclude_urls=None, http_request_options=None):
     """
     run crowler
     :param root_url: Site root url
@@ -15,7 +15,9 @@ def crawler(root_url, out_file, out_format='xml', maxtasks=100, exclude_urls=Non
     :return:
     """
     loop = asyncio.get_event_loop()
-    c = Crawler(root_url, out_file=out_file, out_format=out_format, maxtasks=maxtasks)
+    c = Crawler(
+        root_url, out_file=out_file, out_format=out_format, maxtasks=maxtasks, http_request_options=http_request_options
+    )
     if exclude_urls:
         c.set_exclude_url(urls_list=exclude_urls)
     loop.run_until_complete(c.run())

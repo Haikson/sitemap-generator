@@ -1,6 +1,7 @@
 import logging
 import asyncio
 import re
+from typing import Any, Optional, MutableMapping
 import urllib.parse
 from pysitemap.format_processors.xml import XMLWriter
 from pysitemap.format_processors.text import TextWriter
@@ -16,8 +17,11 @@ class Crawler:
 
     exclude_urls = []
 
-    def __init__(self, rooturl, out_file, out_format='xml', maxtasks=100,
-                 todo_queue_backend=set, done_backend=dict):
+    def __init__(
+            self, rooturl: str, out_file: str, out_format: str = 'xml',
+            maxtasks: int = 100, todo_queue_backend: Any = set, done_backend: Any = dict,
+            http_request_options: Optional[MutableMapping] = None
+        ):
         """
         Crawler constructor
         :param rooturl: root url of site
@@ -35,6 +39,7 @@ class Crawler:
         self.done = done_backend()
         self.tasks = set()
         self.sem = asyncio.Semaphore(maxtasks)
+        self.http_request_options = http_request_options or {}
 
         # connector stores cookies between requests and uses connection pool
         self.session = aiohttp.ClientSession()
@@ -93,7 +98,7 @@ class Crawler:
         self.busy.add(url)
 
         try:
-            resp = await self.session.get(url)  # await response
+            resp = await self.session.get(url, **self.http_request_options)  # await response
         except Exception as exc:
             # on any exception mark url as BAD
             print('...', url, 'has error', repr(str(exc)))
