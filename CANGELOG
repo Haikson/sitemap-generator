@@ -1,4 +1,0 @@
-Version 0.5.1
-
-Fixed:
-    - UnicodeEncodeError: 'ascii' codec can't encode character

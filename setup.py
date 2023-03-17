@@ -13,7 +13,15 @@ def get_requirements():
     requirements = []
     with open('requirements.txt', 'r') as df:
         requirements = df.readlines()
-    return [requirement.strip() for requirement in requirements]
+    
+    requirements = set()
+    for requirement in requirements:
+        requirement = requirement.strip()
+        if requirement and requirement.startswith("#"):
+            requirements.add(requirement)
+
+    return list(requirements)
+
 
 
 setup(
