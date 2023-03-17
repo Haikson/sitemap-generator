@@ -1,11 +1,12 @@
 import logging
 import asyncio
 import re
+import aiohttp
 from typing import Any, Optional, MutableMapping
 import urllib.parse
 from pysitemap.format_processors.xml import XMLWriter
 from pysitemap.format_processors.text import TextWriter
-import aiohttp
+from pysitemap.parsers.re_parser import Parser as ReParser
 
 
 class Crawler:
@@ -44,6 +45,11 @@ class Crawler:
         # connector stores cookies between requests and uses connection pool
         self.session = aiohttp.ClientSession()
         self.writer = self.format_processors.get(out_format)(out_file)
+
+        self.parser = ReParser
+
+    def set_parser(self, parser_class):
+        self.parser = parser_class
 
     async def run(self):
         """
@@ -108,7 +114,7 @@ class Crawler:
             if (resp.status == 200 and
                     ('text/html' in resp.headers.get('content-type'))):
                 data = (await resp.read()).decode('utf-8', 'replace')
-                urls = re.findall(r'(?i)href=["\']?([^\s"\'<>]+)', data)
+                urls = self.parser.parse(data)
                 asyncio.Task(self.addurls([(u, url) for u in urls]))
 
             # even if we have no exception, we can mark url as good
