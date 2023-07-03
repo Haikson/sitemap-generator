@@ -1,3 +1,7 @@
+v. 0.9.11
+''''''''''
+
+- fix incorrect reading requirements.txt
 
 v. 0.9.10
 ''''''''''
