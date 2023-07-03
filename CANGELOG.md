@@ -1,3 +1,9 @@
+v. 0.9.12
+''''''''''
+
+- fix parsers not have been initialized
+
+
 v. 0.9.11
 ''''''''''
 
